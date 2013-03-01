@@ -5,7 +5,7 @@
 
 StudentGrades::StudentGrades(int studentID) {
     this->studentID = studentID;
-    maxSize = 10;
+    maxSize = 2;
     gradesCount = 0;
     grades = (int*) calloc(maxSize, sizeof (int));
 }
@@ -19,7 +19,19 @@ int StudentGrades::getID() {
 }
 
 void StudentGrades::redefine() {
-
+    maxSize = maxSize + 2;
+    int* tempGrades = (int*) calloc(maxSize, sizeof (int));
+    int* ptrGrades = grades - gradesCount;
+    printf("Grades count: %d\n", gradesCount);
+    
+    for (int i = 0; i < gradesCount; i++) {
+        *tempGrades = *ptrGrades;
+        tempGrades++;
+        ptrGrades++;
+    }
+    grades = grades - gradesCount;
+    free(grades);
+    grades = tempGrades;
 }
 
 void StudentGrades::addGrade(int grade) {
@@ -44,5 +56,5 @@ void StudentGrades::printGrades(int minimunPassGrade) {
 
     average /= gradesCount;
     const char* state = average >= minimunPassGrade ? "Pass" : "Fail";
-    printf("%f %s ", average, state);
+    printf(">> %f - %s ", average, state);
 }
